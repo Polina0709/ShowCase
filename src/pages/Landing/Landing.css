@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=Aboreto&display=swap" rel="stylesheet"');
+@import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Akatab:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"');
+
+html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.landing-root {
+    height: 100vh;
+    width: 100vw;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: hidden;
+    position: relative;
+
+}
+
+.landing-root::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+}
+
+.landing-content {
+    margin-left: 6vw;
+    display: flex;
+    flex-direction: column;
+    z-index: 3;
+}
+
+.landing-creators {
+    position: absolute;
+    top: 6vh;
+    left: 6vw;
+    font-family: Akatab, sans-serif;
+    font-size: 0.95rem;
+    opacity: 0.9;
+    line-height: 0.5;
+    z-index: 4;
+}
+
+.landing-title {
+    font-family: Aboreto, sans-serif;
+    font-size: clamp(3rem, 8vw, 10rem);
+    letter-spacing: 2px;
+    font-weight: 500;
+    text-shadow: 0px 3px 8px rgba(0,0,0,0.25);
+    color: #000;
+}
+
+.landing-subtitle {
+    font-family: Aboreto, sans-serif;
+    font-size: clamp(1.2rem, 2.4vw, 2rem);
+    opacity: 0.75;
+    color: #000;
+    line-height: 1.2;
+}
+
+.landing-subtitle span {
+    color: #666;
+}
+
+.landing-button {
+    margin-top: 2rem;
+    width: fit-content;
+    padding: 0.8rem 1.8rem;
+    background: rgba(255, 255, 255, 0.85);
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: Akatab, sans-serif;
+    font-size: 1.2rem;
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.12);
+    transition: 0.2s ease;
+    backdrop-filter: blur(6px);
+}
+
+.landing-button:hover {
+    transform: translateX(4px);
+    box-shadow: 0 6px 28px rgba(0, 0, 0, 0.18);
+}
+
+.arrow {
+    font-size: 1.5rem;
+}
+
+.landing-side-text {
+    position: absolute;
+    right: -26vw;
+    top: 48.5%;
+    transform: translateY(-50%) rotate(-90deg);
+    font-family: Aboreto, sans-serif;
+    font-size: clamp(3rem, 8vw, 7rem);
+    font-weight: 550;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.8);
+    opacity: 0.75;
+    white-space: nowrap;
+    text-shadow: 0px 2px 12px rgba(0,0,0,0.25);
+    z-index: 3;
+    pointer-events: none;
+    user-select: none;
+}
+
+.landing-right-panel {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100vh;
+    width: 30vw;
+    background-size: cover;
+    background-position: center right;
+    filter: blur(2px) brightness(1);
+    opacity: 0.8;
+    border-top-left-radius: 70px;
+    border-bottom-left-radius: 70px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+@media screen and (max-width: 550px) {
+    .landing-right-panel {
+        display: none;
+    }
+
+    .landing-creators {
+        font-size: 0.8rem;
+    }
+
+    .landing-content {
+        align-items: center;
+        text-align: center;
+        margin-left: 0;
+        margin-top: 10vh;
+    }
+
+    .landing-button {
+        align-self: center;
+    }
+}
