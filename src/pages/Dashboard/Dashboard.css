@@ -1,99 +1,92 @@
-@import url('https://fonts.googleapis.com/css2?family=Aboreto&display=swap" rel="stylesheet"');
-@import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Akatab:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"');
+@import url('https://fonts.googleapis.com/css2?family=Aboreto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Akatab:wght@300;400;500;600&display=swap');
 
 /* RESET */
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 /* ROOT BACKGROUND */
 .dash-root {
     min-height: 100vh;
     width: 100%;
+    position: relative;
+    background-image: inherit;
     background-size: cover;
     background-position: center;
-    padding: 20px 24px 32px;
+    padding: 24px 32px;
     font-family: Akatab, sans-serif;
 }
 
+/* Soft gradient overlay to reduce brightness */
+.dash-root::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.45);
+    backdrop-filter: blur(4px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.dash-root > * {
+    position: relative;
+    z-index: 1;
+}
+
+
 /* HEADER */
 .dash-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 100%;
+    text-align: center;
+    padding: 20px 40px;
+    margin-bottom: 28px;
+    border-radius: 30px;
+    background: rgba(255,255,255,0.35);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.12);
     position: relative;
-    margin-bottom: 14px;
 }
 
 .dash-brand {
-    font-family: Aboreto, sans-serif;
-    font-size: clamp(24px, 3.4vw, 42px);
-    font-weight: 500;
+    font-family: Aboreto, serif;
+    font-size: clamp(26px, 3vw, 42px);
     letter-spacing: 2px;
-    color: #0d0d0d;
-    text-shadow: 0 3px 8px rgba(0,0,0,.18);
-}
-
-.dash-gear {
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 52px;
-    height: 52px;
-    border-radius: 999px;
-    background: rgba(255,255,255,.7);
-    display: grid;
-    place-items: center;
-    box-shadow: 0 6px 18px rgba(0,0,0,.12);
-    text-decoration: none;
     color: #111;
-    font-size: 22px;
-    cursor: pointer;
-    border: none;
 }
 
-/* SEARCH + ADD BUTTON */
-.dash-search-row {
-    margin: 8px 0 16px;
-}
-
-.dash-search {
+.dash-header-actions {
+    position: absolute;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
     display: flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(255,255,255,.45);
-    border: 1px solid rgba(0,0,0,.08);
-    border-radius: 28px;
-    backdrop-filter: blur(12px);
-    padding: 8px 14px;
+    gap: 12px;
 }
 
-.dash-add {
-    width: 34px;
-    height: 34px;
-    border-radius: 999px;
+.dash-logout {
+    background: rgba(255,255,255,0.65);
+    backdrop-filter: blur(10px);
     border: none;
+    padding: 8px 18px;
+    border-radius: 14px;
     cursor: pointer;
-    background: white;
-    box-shadow: 0 4px 14px rgba(0,0,0,.12);
-    font-size: 22px;
-    line-height: 1;
+    font-size: 14px;
+    transition: .25s;
 }
 
-.dash-search-input {
-    flex: 1;
-    border: none;
-    outline: none;
-    background: transparent;
-    font-size: 15px;
-    color: #222;
+.dash-logout:hover {
+    background: rgba(255,255,255,0.9);
 }
 
-/* GRID LAYOUT */
+
+/* GRID */
 .dash-grid {
     display: grid;
     grid-template-columns: 360px 1fr;
-    gap: 22px;
+    gap: 32px;
 }
 
 @media (max-width: 1020px) {
@@ -102,25 +95,48 @@
     }
 }
 
+
 /* PROFILE PANEL */
 .dash-profile {
     background: linear-gradient(135deg, rgba(255,255,255,.22), rgba(255,255,255,.32));
     backdrop-filter: blur(18px);
     border-radius: 28px;
-    padding: 24px;
-    box-shadow: 0 10px 28px rgba(0,0,0,.12);
+    padding: 30px 24px 38px;
+    box-shadow: 0 12px 28px rgba(0,0,0,.18);
+    text-align: left;
+    position: relative;
 }
 
+/* Edit Profile Button Inside Profile Card */
+.dash-profile-edit {
+    position: absolute;
+    top: 18px;
+    right: 24px;
+    padding: 6px 14px;
+    background: rgba(255,255,255,0.65);
+    backdrop-filter: blur(10px);
+    border-radius: 14px;
+    border: none;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.25s;
+}
+.dash-profile-edit:hover {
+    background: rgba(255,255,255,0.9);
+}
+
+
+/* AVATAR */
 .dash-avatar-wrap {
     position: relative;
     width: 210px;
     height: 210px;
-    margin: 12px auto 22px;
+    margin: 0 auto 26px;
 }
 
 .dash-avatar {
-    width: 210px;
-    height: 210px;
+    width: 100%;
+    height: 100%;
     border-radius: 999px;
     overflow: hidden;
     background: #ddd;
@@ -133,20 +149,20 @@
 }
 
 .dash-avatar-fallback {
-    width: 100%;
-    height: 100%;
     display: grid;
     place-items: center;
     font-size: 64px;
-    color: #666;
     background: #eee;
-    border-radius: 999px;
+    color: #666;
+    width: 100%;
+    height: 100%;
 }
 
+/* Attach photo */
 .dash-attach {
     position: absolute;
-    right: -10px;
-    top: 8px;
+    right: -6px;
+    bottom: 6px;
     width: 44px;
     height: 44px;
     border-radius: 999px;
@@ -154,114 +170,115 @@
     background: white;
     cursor: pointer;
     box-shadow: 0 6px 16px rgba(0,0,0,.18);
-    font-size: 18px;
     display: grid;
     place-items: center;
 }
 
+
+/* PROFILE TEXT */
 .dash-name {
-    text-align: left;
-    margin: 6px 0 2px 6px;
     font-family: "Playfair Display", serif;
     font-size: 26px;
-    letter-spacing: 1px;
-    color: #141414;
-}
-
-.dash-muted {
-    margin-left: 6px;
-    color: #333;
-    opacity: .75;
-    font-size: 14px;
-}
-
-/* PROFILE CONTACT BLOCK */
-.dash-info {
-    margin-top: 22px;
-    font-size: 14px;
-}
-
-.dash-info label {
-    display: block;
-    font-weight: 600;
-    margin: 12px 0 4px 6px;
+    margin-top: 4px;
+    text-align: center;
     color: #111;
 }
 
-.dash-info div {
-    margin-left: 18px;
-    white-space: pre-wrap;
+.dash-muted {
+    text-align: center;
+    font-size: 14px;
+    opacity: 0.75;
+    margin-top: 6px;
 }
 
-.dash-info a {
-    color: #0c0c0c;
-    text-decoration: none;
+.dash-info {
+    margin-top: 26px;
+    line-height: 1.6;
+    font-size: 14px;
 }
 
-/* RIGHT PANEL — RESUMES */
+
+/* RESUME LIST PANEL */
 .dash-resumes {
     background: linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,.28));
-    border-radius: 28px;
     backdrop-filter: blur(14px);
-    box-shadow: 0 10px 28px rgba(0,0,0,.12);
-    padding: 22px;
+    border-radius: 28px;
+    padding: 28px;
     min-height: 60vh;
+    position: relative;
+    box-shadow: 0 12px 26px rgba(0,0,0,.18);
 }
+
+/* + Button inside resumes panel */
+.dash-add {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+    border-radius: 999px;
+    background: white;
+    border: none;
+    box-shadow: 0 6px 14px rgba(0,0,0,.18);
+    font-size: 26px;
+    cursor: pointer;
+    transition: 0.25s;
+}
+.dash-add:hover {
+    transform: translateY(-3px);
+}
+
 
 /* EMPTY STATE */
 .dash-empty {
-    width: 100%;
-    height: 100%;
-    border: 2px dashed rgba(0,0,0,.12);
+    border: 2px dashed rgba(0,0,0,.18);
     border-radius: 24px;
     background: transparent;
     display: grid;
     place-items: center;
     text-align: center;
     cursor: pointer;
-    color: #0d0d0d;
-    padding: 20px;
+    color: #111;
+    padding: 40px;
 }
-
 .dash-empty:hover {
-    background: rgba(255,255,255,.3);
+    background: rgba(255,255,255,.4);
 }
 
-.dash-empty-plus {
-    font-size: 34px;
-    display: block;
-    margin-bottom: 6px;
-}
 
-/* RESUME CARDS WHEN EXIST */
+/* RESUME CARDS */
 .dash-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
 }
 
 .dash-card {
     background: rgba(255,255,255,.8);
-    border-radius: 16px;
-    padding: 14px;
+    border-radius: 18px;
+    padding: 18px;
     box-shadow: 0 6px 18px rgba(0,0,0,.12);
     cursor: pointer;
-    transition: transform .15s ease, box-shadow .18s ease;
+    transition: 0.25s;
+    position: relative;
 }
 
 .dash-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,.16);
 }
 
-.dash-card-title {
+.dash-card.draft {
+    opacity: 0.6;
+}
+
+.dash-card-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: #ffeb73;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 11px;
     font-weight: 600;
-    margin-bottom: 6px;
 }
 
-.dash-card-meta {
-    font-size: 12px;
-    opacity: .75;
-    display: flex;
-    gap: 8px;
-}

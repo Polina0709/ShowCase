@@ -20,31 +20,34 @@ export default function Login() {
         navigate("/dashboard");
     };
 
+    const onGoogle = async () => {
+        try {
+            await loginWithGoogle();
+            navigate("/dashboard");
+        } catch (err) {
+            console.error(err);
+            alert("Google login failed!");
+        }
+    };
+
     return (
         <div className="auth-root" style={{ backgroundImage: `url(${bg})` }}>
             <div className="auth-card" >
 
-                {/* Back button */}
                 <div className="auth-back" onClick={() => navigate(-1)}>←</div>
 
-                {/* Title */}
                 <h2 className="auth-title">SHOWCASE</h2>
                 <div className="auth-top-row">
                     <h3 className="auth-subtitle">LOG IN</h3>
 
-                    <div className="auth-google" onClick={loginWithGoogle}>
+                    <div className="auth-google" onClick={onGoogle}>
                         <FcGoogle size={20} /> Google
                     </div>
                 </div>
 
-                {/* FORM */}
                 <form onSubmit={handleSubmit(onSubmit)} className="auth-form">
 
-                    <input
-                        {...register("email")}
-                        placeholder="e-mail..."
-                        className="auth-input"
-                    />
+                    <input {...register("email")} placeholder="e-mail..." className="auth-input" />
                     {errors.email && <p className="auth-error">{errors.email.message}</p>}
 
                     <div className="auth-row">
@@ -54,17 +57,13 @@ export default function Login() {
                             {...register("password")}
                             className="auth-input"
                         />
-                        <button type="button" className="auth-forgot">
-                            I forgot
-                        </button>
+                        <button type="button" className="auth-forgot">I forgot</button>
                     </div>
                     {errors.password && <p className="auth-error">{errors.password.message}</p>}
 
-                    {/* Submit arrow */}
                     <button type="submit" className="auth-submit">→</button>
                 </form>
 
-                {/* Bottom link */}
                 <div className="auth-footer">
                     Don’t have an account?
                     <Link to="/signup"> Sign Up</Link>
@@ -73,4 +72,5 @@ export default function Login() {
         </div>
     );
 }
+
 

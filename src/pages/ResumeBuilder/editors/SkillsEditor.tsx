@@ -1,46 +1,67 @@
-import { useState } from "react";
-import type {SkillSection} from "../../../types/resume";
+import { useState, useEffect } from "react";
+import type { ResumeSection } from "../../../types/resume";
 
 interface Props {
-    section: SkillSection;
-    update: (items: string[]) => void;
+    section: Extract<ResumeSection, { type: "skills" }>;
+    onChange: (data: { skills: string[] }) => void;
 }
 
-export default function SkillsEditor({ section, update }: Props) {
-    const [skill, setSkill] = useState("");
+export default function SkillsEditor({ section, onChange }: Props) {
+    const initial = Array.isArray(section.data?.skills) ? section.data.skills : [];
 
-    const addSkill = () => {
-        if (!skill.trim()) return;
-        update([...section.items, skill]);
-        setSkill("");
+    // ✅ локальний стейт — швидкий і без лагів
+    const [skills, setSkills] = useState<string[]>(initial);
+
+    // ✅ синхронізуємо при зовнішніх змінах
+    useEffect(() => setSkills(initial), [section.data]);
+
+    const updateSkill = (index: number, value: string) => {
+        const updated = [...skills];
+        updated[index] = value;
+        setSkills(updated); // ✅ миттєво і не лагує
     };
 
-    const removeSkill = (i: number) => {
-        update(section.items.filter((_, idx) => idx !== i));
+    const commitSkills = () => {
+        onChange({ skills }); // ✅ збереження лише коли завершили ввод (onBlur)
+    };
+
+    const addSkill = () => {
+        const updated = [...skills, ""];
+        setSkills(updated);
+        onChange({ skills: updated }); // ✅ зміна структури → одразу синхронізуємо
+    };
+
+    const removeSkill = (index: number) => {
+        const updated = skills.filter((_, i) => i !== index);
+        setSkills(updated);
+        onChange({ skills: updated });
     };
 
     return (
-        <div>
-            <div className="flex gap-2 mb-3">
-                <input
-                    className="border p-2 flex-grow"
-                    placeholder="React, TypeScript..."
-                    value={skill}
-                    onChange={(e) => setSkill(e.target.value)}
-                />
-                <button onClick={addSkill} className="bg-blue-600 text-white px-3 rounded">
-                    Add
-                </button>
-            </div>
+        <div className="space-y-3">
+            {skills.map((skill, index) => (
+                <div key={index} className="flex gap-2">
+                    <input
+                        className="border p-2 rounded w-full"
+                        value={skill}
+                        onChange={(e) => updateSkill(index, e.target.value)}
+                        onBlur={commitSkills} // ✅ передаємо у resume тільки після завершення вводу
+                    />
+                    <button
+                        onClick={() => removeSkill(index)}
+                        className="text-red-500 hover:underline"
+                    >
+                        ✕
+                    </button>
+                </div>
+            ))}
 
-            <div className="flex flex-wrap gap-2">
-                {section.items.map((s, i) => (
-                    <div key={i} className="bg-gray-200 px-2 py-1 rounded flex gap-1">
-                        {s}
-                        <button className="text-red-500" onClick={() => removeSkill(i)}>×</button>
-                    </div>
-                ))}
-            </div>
+            <button
+                onClick={addSkill}
+                className="text-sm text-blue-600 hover:underline"
+            >
+                + Add skill
+            </button>
         </div>
     );
 }

@@ -1,11 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import "./Auth.css";
 import bg from "../../assets/bg.jpg";
+import { FcGoogle } from "react-icons/fc";
 import { useForm } from "react-hook-form";
 import { signupSchema } from "../../utils/validators/auth";
 import type { SignupSchema } from "../../utils/validators/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signupWithEmail, updateUserProfile} from "../../services/auth";
+import { signupWithEmail, updateUserProfile, loginWithGoogle } from "../../services/auth";
 import { ref, set } from "firebase/database";
 import { db } from "../../services/firebase";
 
@@ -40,6 +41,16 @@ export default function Signup() {
         }
     };
 
+    const onGoogle = async () => {
+        try {
+            await loginWithGoogle();
+            navigate("/onboarding");
+        } catch (err) {
+            console.error(err);
+            alert("Google signup failed!");
+        }
+    };
+
     return (
         <div className="auth-root" style={{ backgroundImage: `url(${bg})` }}>
             <div className="auth-card">
@@ -47,7 +58,13 @@ export default function Signup() {
                 <div className="auth-back" onClick={() => navigate(-1)}>←</div>
 
                 <h2 className="auth-title">SHOWCASE</h2>
+                <div className="auth-top-row">
                 <h3 className="auth-subtitle">SIGN UP</h3>
+
+                <div className="auth-google" onClick={onGoogle}>
+                    <FcGoogle size={20} /> Google
+                </div>
+                </div>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="auth-form">
 
@@ -79,4 +96,5 @@ export default function Signup() {
         </div>
     );
 }
+
 

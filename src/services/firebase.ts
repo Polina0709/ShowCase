@@ -4,12 +4,13 @@ import { getDatabase } from "firebase/database";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER,
-    appId: import.meta.env.VITE_FIREBASE_APP_ID
+    apiKey: "AIzaSyCyYT8gR0wdUDFvsMHi0i3GS1DFa00cLFc",
+    authDomain: "showcase-33bff.firebaseapp.com",
+    databaseURL: "https://showcase-33bff-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "showcase-33bff",
+    storageBucket: "showcase-33bff.firebasestorage.app",
+    messagingSenderId: "123336267781",
+    appId: "1:123336267781:web:24e8679b143c44794b246c"
 };
 
 const app = initializeApp(firebaseConfig);

@@ -8,11 +8,12 @@ import Onboarding from "../pages/Auth/Onboarding";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import ResumeBuilder from "../pages/ResumeBuilder/ResumeBuilder";
 import PublicResume from "../pages/PublicResume/PublicResume";
+import ProfilePage from "../pages/ProfilePage"; // ✅ ДОДАНО
 
 // Router guard
 import ProtectedRoute from "./ProtectedRoute";
 
-// Error page (optional but recommended)
+// Error page
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
 
 export const router = createBrowserRouter([
@@ -46,6 +47,14 @@ export const router = createBrowserRouter([
         element: (
             <ProtectedRoute>
                 <ResumeBuilder />
+            </ProtectedRoute>
+        ),
+    },
+    {
+        path: "/profile",
+        element: (
+            <ProtectedRoute>
+                <ProfilePage />
             </ProtectedRoute>
         ),
     },

@@ -9,6 +9,7 @@ import {
 } from "firebase/database";
 import { db } from "./firebase";
 import type {Resume} from "../types/resume";
+import { query, orderByChild, equalTo } from "firebase/database";
 
 /**
  * Створення нового резюме (чернетки)
@@ -54,13 +55,22 @@ export const listenToResume = (resumeId: string, cb: (res: Resume) => void) => {
  * Отримання всіх резюме користувача (Dashboard list)
  */
 export const getUserResumes = (uid: string, cb: (r: Resume[]) => void) => {
-    onValue(ref(db, "resumes"), (snap) => {
-        const data = snap.val() || {};
-        const result = Object.values<Resume>(data).filter(
-            (r) => r.owner === uid
-        );
-        cb(result);
+    const resumesQuery = query(
+        ref(db, "resumes"),
+        orderByChild("owner"),
+        equalTo(uid)
+    );
+
+    const unsubscribe = onValue(resumesQuery, (snap) => {
+        const data = snap.val();
+        if (!data) {
+            cb([]); // немає резюме → повертаємо пустий масив
+            return;
+        }
+        cb(Object.values(data));
     });
+
+    return () => unsubscribe();
 };
 
 /**

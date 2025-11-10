@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { createResume, getUserResumes } from "../../services/dbResumes";
 import type { Resume } from "../../types/resume";
+import { signOut } from "firebase/auth";
+import { auth } from "../../services/firebase";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 import bg from "../../assets/bg.jpg";
-import { getUserRecord } from "../../services/dbUsers";
+import { getUserRecord, uploadUserPhoto } from "../../services/dbUsers";
 
 type UserProfile = {
     name?: string;
@@ -25,10 +27,15 @@ export default function Dashboard() {
     const [profile, setProfile] = useState<UserProfile>({});
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+    const handleLogout = async () => {
+        await signOut(auth);
+        navigate("/login");
+    };
+
     useEffect(() => {
         if (!user) return;
 
-        getUserResumes(user.uid, setResumes);
+        const unsubscribe = getUserResumes(user.uid, setResumes);
 
         (async () => {
             const p = await getUserRecord(user.uid);
@@ -43,6 +50,8 @@ export default function Dashboard() {
                 photoURL: p?.photoURL || user.photoURL || "",
             });
         })();
+
+        return unsubscribe;
     }, [user]);
 
     const handleCreate = async () => {
@@ -51,20 +60,26 @@ export default function Dashboard() {
         navigate(`/builder/${newResume.id}`);
     };
 
+    const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file || !user) return;
+
+        const url = await uploadUserPhoto(user.uid, file);
+        setProfile((prev) => ({ ...prev, photoURL: url }));
+    };
+
     return (
         <div className="dash-root" style={{ backgroundImage: `url(${bg})` }}>
             {/* HEADER */}
             <header className="dash-header">
                 <h1 className="dash-brand">SHOWCASE</h1>
-                <button className="dash-gear">⚙️</button>
-            </header>
 
-            {/* SEARCH ROW */}
-            <div className="dash-search-row">
-                <div className="dash-search">
-                    <button onClick={handleCreate} className="dash-add">+</button>
+                <div className="dash-header-actions">
+                    <button onClick={handleLogout} className="dash-logout">
+                        Logout
+                    </button>
                 </div>
-            </div>
+            </header>
 
             {/* MAIN GRID */}
             <div className="dash-grid">
@@ -73,18 +88,37 @@ export default function Dashboard() {
                     <div className="dash-avatar-wrap">
                         <div className="dash-avatar">
                             {profile.photoURL ? (
-                                <img src={profile.photoURL} />
+                                <img src={profile.photoURL} alt="avatar" />
                             ) : (
                                 <div className="dash-avatar-fallback">
                                     {(profile.name ?? "U")[0]}
                                 </div>
                             )}
                         </div>
-                        <button className="dash-attach" onClick={() => fileInputRef.current?.click()}>
+
+                        <button
+                            className="dash-attach"
+                            onClick={() => fileInputRef.current?.click()}
+                        >
                             📎
                         </button>
-                        <input ref={fileInputRef} type="file" accept="image/*" hidden />
+
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/*"
+                            hidden
+                            onChange={handlePhotoUpload}
+                        />
                     </div>
+
+                    {/* ✅ Кнопка редагування профілю тепер ТУТ */}
+                    <button
+                        className="dash-profile-edit"
+                        onClick={() => navigate("/profile")}
+                    >
+                        Edit Profile
+                    </button>
 
                     <div className="dash-name">
                         {(profile.name || "").toUpperCase()} {(profile.lastName || "").toUpperCase()}
@@ -92,7 +126,9 @@ export default function Dashboard() {
 
                     {(profile.city || profile.country) && (
                         <div className="dash-muted">
-                            {profile.city}{profile.city && profile.country ? ", " : ""}{profile.country}
+                            {profile.city}
+                            {profile.city && profile.country ? ", " : ""}
+                            {profile.country}
                         </div>
                     )}
 
@@ -108,21 +144,35 @@ export default function Dashboard() {
                     </div>
                 </aside>
 
-                {/* RESUME AREA */}
+                {/* RESUME LIST */}
                 <section className="dash-resumes">
+                    {/* ✅ Кнопка додавання резюме тепер тут */}
+                    <button className="dash-add" onClick={handleCreate} title="Create resume">
+                        +
+                    </button>
+
                     {resumes.length === 0 ? (
                         <button onClick={handleCreate} className="dash-empty">
                             <span className="dash-empty-plus">+</span>
-                            <span>ADD<br/>YOUR FIRST CV</span>
+                            <span>
+                ADD <br />
+                YOUR FIRST CV
+              </span>
                         </button>
                     ) : (
                         <div className="dash-cards">
                             {resumes.map((resume) => (
-                                <div key={resume.id} className="dash-card" onClick={() => navigate(`/builder/${resume.id}`)}>
+                                <div
+                                    key={resume.id}
+                                    className={`dash-card ${resume.isPublished ? "" : "draft"}`}
+                                    onClick={() => navigate(`/builder/${resume.id}`)}
+                                >
+                                    {!resume.isPublished && (
+                                        <div className="dash-card-badge">DRAFT</div>
+                                    )}
+
                                     <div className="dash-card-title">{resume.title}</div>
                                     <div className="dash-card-meta">
-                                        <span>{resume.isPublished ? "Published" : "Draft"}</span>
-                                        <span>•</span>
                                         <span>{resume.views} views</span>
                                     </div>
                                 </div>
@@ -134,4 +184,3 @@ export default function Dashboard() {
         </div>
     );
 }
-

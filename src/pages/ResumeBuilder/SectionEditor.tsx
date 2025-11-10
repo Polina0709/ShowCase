@@ -2,8 +2,19 @@ import {
     DragDropContext,
     Droppable,
     Draggable,
+    type DropResult
 } from "@hello-pangea/dnd";
-import type {Resume, ResumeSection} from "../../types/resume";
+
+import type {
+    Resume,
+    ResumeSection,
+    AboutSection,
+    SkillsSection,
+    ExperienceSection,
+    ProjectsSection,
+    ContactsSection,
+    VideoSection
+} from "../../types/resume";
 
 import AboutEditor from "./editors/AboutEditor";
 import SkillsEditor from "./editors/SkillsEditor";
@@ -14,115 +25,123 @@ import VideoEditor from "./editors/VideoEditor";
 
 interface Props {
     resume: Resume;
-    saveChanges: (c: Partial<Resume>) => void;
+    saveChanges: (changes: Partial<Resume>) => void;
 }
 
 export default function SectionEditor({ resume, saveChanges }: Props) {
-    const deleteSection = (id: string) => {
-        saveChanges({
-            sections: resume.sections.filter((s) => s.id !== id),
-        });
-    };
 
-    const renderEditor = (section: ResumeSection, update: (val: ResumeSection) => void) => {
-        switch (section.type) {
-            case "about":
-                return (
-                    <AboutEditor
-                        section={section}
-                        update={(content) => update({ ...section, content })}
-                    />
-                );
-            case "skills":
-                return (
-                    <SkillsEditor
-                        section={section}
-                        update={(items) => update({ ...section, items })}
-                    />
-                );
-            case "experience":
-                return (
-                    <ExperienceEditor
-                        section={section}
-                        update={(data) => update(data)}
-                    />
-                );
-            case "projects":
-                return (
-                    <ProjectsEditor
-                        section={section}
-                        update={(data) => update(data)}
-                    />
-                );
-            case "contacts":
-                return (
-                    <ContactsEditor
-                        section={section}
-                        update={(data) => update(data)}
-                    />
-                );
-            case "video":
-                return (
-                    <VideoEditor
-                        section={section}
-                        update={(data) => update(data)}
-                    />
-                );
-            default:
-                return null;
-        }
-    };
+    const sections: ResumeSection[] = resume.sections ?? [];
 
-    const updateSection = (id: string, data: ResumeSection) => {
-        const updated = resume.sections.map((s) =>
-            s.id === id ? { ...data } : s
-        );
+    const handleDragEnd = (result: DropResult) => {
+        if (!result.destination) return;
 
+        const updated = [...sections];
+        const [moved] = updated.splice(result.source.index, 1);
+        updated.splice(result.destination.index, 0, moved);
         saveChanges({ sections: updated });
     };
 
+    const removeSection = (index: number) => {
+        const updated = sections.filter((_, i) => i !== index);
+        saveChanges({ sections: updated });
+    };
+
+    /** ✅ Типобезпечне оновлення секцій */
+    const updateSectionData = <T extends ResumeSection>(index: number, data: T["data"]) => {
+        const updated = [...sections];
+        updated[index] = { ...updated[index], data } as T;
+        saveChanges({ sections: updated });
+    };
+
+    const renderEditor = (section: ResumeSection, index: number) => {
+        switch (section.type) {
+
+            case "about":
+                return (
+                    <AboutEditor
+                        section={section as AboutSection}
+                        onChange={(d) => updateSectionData<AboutSection>(index, d)}
+                    />
+                );
+
+            case "skills":
+                return (
+                    <SkillsEditor
+                        section={section as SkillsSection}
+                        onChange={(d) => updateSectionData<SkillsSection>(index, d)}
+                    />
+                );
+
+            case "experience":
+                return (
+                    <ExperienceEditor
+                        section={section as ExperienceSection}
+                        onChange={(d) => updateSectionData<ExperienceSection>(index, d)}
+                    />
+                );
+
+            case "projects":
+                return (
+                    <ProjectsEditor
+                        section={section as ProjectsSection}
+                        onChange={(d) => updateSectionData<ProjectsSection>(index, d)}
+                    />
+                );
+
+            case "contacts":
+                return (
+                    <ContactsEditor
+                        section={section as ContactsSection}
+                        onChange={(d) => updateSectionData<ContactsSection>(index, d)}
+                    />
+                );
+
+            case "video":
+                return (
+                    <VideoEditor
+                        section={section as VideoSection}
+                        onChange={(d) => updateSectionData<VideoSection>(index, d)}
+                    />
+                );
+
+            default:
+                return <p className="text-gray-400 text-sm">Unknown section</p>;
+        }
+    };
+
     return (
-        <DragDropContext
-            onDragEnd={(result) => {
-                if (!result.destination) return;
-
-                const items = Array.from(resume.sections);
-                const [reordered] = items.splice(result.source.index, 1);
-                items.splice(result.destination.index, 0, reordered);
-
-                saveChanges({ sections: items });
-            }}
-        >
+        <DragDropContext onDragEnd={handleDragEnd}>
             <Droppable droppableId="sections">
                 {(provided) => (
-                    <div
-                        {...provided.droppableProps}
-                        ref={provided.innerRef}
-                        className="space-y-6"
-                    >
-                        {resume.sections.map((section, index) => (
-                            <Draggable
-                                key={section.id}
-                                draggableId={section.id}
-                                index={index}
-                            >
+                    <div ref={provided.innerRef} {...provided.droppableProps}>
+                        {sections.length === 0 && (
+                            <div className="text-center text-gray-400 py-14">
+                                No sections yet.<br />
+                            </div>
+                        )}
+
+                        {sections.map((section, index) => (
+                            <Draggable key={section.id} draggableId={section.id} index={index}>
                                 {(provided) => (
                                     <div
                                         ref={provided.innerRef}
-                                        {...provided.dragHandleProps}
                                         {...provided.draggableProps}
-                                        className="border bg-white p-4 rounded-md shadow-sm relative"
+                                        {...provided.dragHandleProps}
+                                        className="mb-6 border border-gray-200 rounded-xl p-5 bg-white shadow-sm"
                                     >
-                                        <button
-                                            className="absolute top-2 right-2 text-red-500 text-sm"
-                                            onClick={() => deleteSection(section.id)}
-                                        >
-                                            ✕
-                                        </button>
+                                        <div className="flex justify-between items-center mb-3">
+                                            <h3 className="font-semibold text-lg capitalize">
+                                                {section.type}
+                                            </h3>
+                                            <button
+                                                onClick={() => removeSection(index)}
+                                                className="text-red-500 text-sm hover:underline"
+                                            >
+                                                Remove
+                                            </button>
+                                        </div>
 
-                                        {renderEditor(section, (val: ResumeSection) =>
-                                            updateSection(section.id, val)
-                                        )}
+                                        {renderEditor(section, index)}
                                     </div>
                                 )}
                             </Draggable>
@@ -135,3 +154,4 @@ export default function SectionEditor({ resume, saveChanges }: Props) {
         </DragDropContext>
     );
 }
+

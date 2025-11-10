@@ -1,56 +1,3 @@
-import type {SectionType} from "../pages/ResumeBuilder/types.ts";
-
-export interface BaseSection {
-    id: string;
-    type: SectionType;
-}
-
-export type AboutSection = BaseSection & {
-    type: "about";
-    content: string;
-};
-
-export type SkillSection = BaseSection & {
-    type: "skills";
-    items: string[];
-};
-
-export type ExperienceSection = BaseSection & {
-    type: "experience";
-    position?: string;
-    company?: string;
-    years?: string;
-    content?: string;
-};
-
-export type ProjectSection = BaseSection & {
-    type: "projects";
-    name?: string;
-    url?: string;
-    content?: string;
-};
-
-export type ContactsSection = BaseSection & {
-    type: "contacts";
-    email?: string;
-    phone?: string;
-    linkedin?: string;
-    github?: string;
-};
-
-export type VideoSection = BaseSection & {
-    type: "video";
-    url?: string;
-};
-
-export type ResumeSection =
-    | AboutSection
-    | SkillSection
-    | ExperienceSection
-    | ProjectSection
-    | ContactsSection
-    | VideoSection;
-
 export interface Resume {
     id: string;
     owner: string;
@@ -60,3 +7,91 @@ export interface Resume {
     lastUpdated: number;
     views: number;
 }
+
+export type ResumeSection =
+    | AboutSection
+    | SkillsSection
+    | ExperienceSection
+    | ProjectsSection
+    | ContactsSection
+    | VideoSection;
+
+// === ABOUT ===
+export interface AboutSection {
+    id: string;
+    type: "about";
+    data: {
+        headline: string;
+        bio: string;
+    };
+}
+
+
+// === SKILLS ===
+export interface SkillsSection {
+    id: string;
+    type: "skills";
+    data: {
+        skills: string[];
+    };
+}
+
+// === EXPERIENCE ===
+export interface ResumeExperienceItem {
+    id: string;
+    role: string;
+    company: string;
+    period: string;
+    description: string;
+}
+
+export interface ExperienceSection {
+    id: string;
+    type: "experience";
+    data: {
+        items: ResumeExperienceItem[];
+    };
+}
+
+// === PROJECTS ===
+export interface ResumeProjectItem {
+    id: string;
+    title: string;
+    description: string;
+    link?: string;
+    imageUrl?: string;
+}
+
+export interface ProjectsSection {
+    id: string;
+    type: "projects";
+    data: {
+        projects: ResumeProjectItem[];
+    };
+}
+
+// === CONTACTS ===
+export interface ResumeContactsData {
+    email?: string;
+    phone?: string;
+    location?: string;
+    linkedin?: string;
+    github?: string;
+    portfolio?: string;
+}
+
+export interface ContactsSection {
+    id: string;
+    type: "contacts";
+    data: ResumeContactsData;
+}
+
+// === VIDEO ===
+export interface VideoSection {
+    id: string;
+    type: "video";
+    data: {
+        url: string;
+    };
+}
+
