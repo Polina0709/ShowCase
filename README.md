@@ -1,75 +1,62 @@
-# React + TypeScript + Vite
+# 🌟 Showcase — Personal Resume Portfolio Builder
+---
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🚀 Поточний функціонал
 
-Currently, two official plugins are available:
+### 🔐 Аутентифікація
+- Реєстрація та логін за допомогою Firebase Authentication
+- Перенаправлення залежно від статусу авторизації
+- Кнопка *Logout* у Dashboard
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 👤 Профіль користувача
+- Дані профілю зберігаються у Firebase Realtime Database
+- Поля профілю: **Name, Last Name, Email, Phone, LinkedIn, City, Country**
+- Завантаження фото профілю (Firebase Storage)
+- Фото оновлюється у UI без перезавантаження
+- Кнопка **Edit Profile** знаходиться прямо в профіль-панелі
 
-## React Compiler
+### 📄 Редактор резюме (Resume Builder)
+- Повністю інтерактивний редактор з живим попереднім переглядом
+- Підтримка різних блоків:
+  - About / Bio
+  - Skills
+  - Work Experience
+  - Projects
+  - Contacts
+  - **Video pitch section** (підтримує *YouTube* + *Firebase Video Upload*)
+- Автозбереження змін
+- Підтримка drag-and-drop reorder блоків
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
 
-Note: This will impact Vite dev & build performances.
+### 🎨 Dashboard (інтерфейс панелі керування)
+- Стилізовано під **glassmorphism** (напівпрозоре скло + мʼякі тіні)
+- Ліва панель — профіль користувача
+- Права панель — список резюме
+- Кнопка **"+"** для створення резюме знаходиться в розділі резюме та не змінює позицію
+- Резюме позначаються як:
+  - **DRAFT** (не опубліковані)
+  - **Published** (готові до перегляду)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🛠 Технології
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+| Технологія | Використання |
+|-----------|--------------|
+| React + TypeScript | UI та логіка застосунку |
+| Firebase Authentication | Авторизація |
+| Firebase Realtime Database | Збереження профілю та резюме |
+| Firebase Storage | Фото профілю та відео в резюме |
+| React Router | Навігація (Dashboard / Builder / Public Resume) |
+| CSS (glass UI + adaptive layout) | Стилізація інтерфейсу |
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🔮 Наступні задачі (Roadmap)
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- Публічна сторінка резюме з унікальним URL
+- Соціальний превʼю / шеринґ
+- Можливість експорту PDF
+- Аналітика переглядів резюме
+  
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
