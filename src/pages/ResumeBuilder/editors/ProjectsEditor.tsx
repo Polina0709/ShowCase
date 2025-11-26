@@ -1,14 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { v4 as uuid } from "uuid";
 import type { ProjectsSection, ResumeProjectItem } from "../../../types/resume";
 
 interface Props {
-    section: ProjectsSection; // ✅ ВАЖЛИВО — конкретний тип, а не ResumeSection
+    section: ProjectsSection;
     onChange: (data: ProjectsSection["data"]) => void;
 }
 
 export default function ProjectsEditor({ section, onChange }: Props) {
-    const projects: ResumeProjectItem[] = section.data?.projects ?? [];
+    const [projects, setProjects] = useState<ResumeProjectItem[]>(section.data?.projects ?? []);
+
+    // синхронізація, якщо ззовні змінилась секція
+    useEffect(() => {
+        setProjects(section.data?.projects ?? []);
+    }, [section.id]);
+
+    const sync = (updated: ResumeProjectItem[]) => {
+        setProjects(updated);
+        onChange({ projects: updated });
+    };
 
     const [newProject, setNewProject] = useState({
         title: "",
@@ -18,106 +28,148 @@ export default function ProjectsEditor({ section, onChange }: Props) {
     });
 
     const addProject = () => {
-        if (!newProject.title.trim()) return;
+        const trimmedTitle = newProject.title.trim();
 
-        const updated = [
-            ...projects,
-            { id: uuid(), ...newProject }
-        ];
+        if (!trimmedTitle) {
+            // ❗ ось тут тепер видно, що саме не так
+            alert("Please enter Project Title before adding a project 🙂");
+            return;
+        }
 
-        onChange({ projects: updated });
+        const project: ResumeProjectItem = {
+            id: uuid(),
+            title: trimmedTitle,
+            description: newProject.description.trim(),
+            link: newProject.link || undefined,
+            imageUrl: newProject.imageUrl || undefined,
+        };
 
-        setNewProject({ title: "", description: "", link: "", imageUrl: "" });
+        const updated = [...projects, project];
+        sync(updated);
+
+        setNewProject({
+            title: "",
+            description: "",
+            link: "",
+            imageUrl: "",
+        });
     };
 
     const updateField = (index: number, field: keyof ResumeProjectItem, value: string) => {
         const updated = [...projects];
         updated[index] = { ...updated[index], [field]: value };
-        onChange({ projects: updated });
+        sync(updated);
     };
 
     const removeProject = (index: number) => {
         const updated = projects.filter((_, i) => i !== index);
-        onChange({ projects: updated });
+        sync(updated);
     };
 
     return (
-        <div className="space-y-6">
-            {projects.length > 0 && projects.map((project, index) => (
-                <div key={project.id} className="border rounded p-4 bg-gray-50 shadow-sm">
-                    <div className="flex justify-between items-center mb-2">
-                        <h4 className="font-medium">{project.title}</h4>
+        <div>
+            {projects.map((project, index) => (
+                <div
+                    key={project.id}
+                    className="inner-card"
+                    style={{ padding: "18px", marginBottom: "16px" }}
+                >
+                    <div className="section-header">
+                        <h4 style={{ fontSize: "16px", fontWeight: 600 }}>
+                            {project.title || "Project"}
+                        </h4>
+
                         <button
+                            type="button"
+                            className="remove-btn"
+                            style={{
+                                padding: "6px 10px",
+                                fontSize: "13px",
+                                borderRadius: "12px",
+                                position: "static",
+                            }}
                             onClick={() => removeProject(index)}
-                            className="text-red-500 text-sm hover:underline"
                         >
                             Remove
                         </button>
                     </div>
 
                     <input
-                        className="input mb-2"
+                        className="round-input"
                         placeholder="Project Title"
                         value={project.title}
                         onChange={(e) => updateField(index, "title", e.target.value)}
+                        style={{ marginTop: 12 }}
                     />
 
                     <textarea
-                        className="input mb-2"
-                        placeholder="Short description of the project..."
+                        className="round-input"
+                        placeholder="Short description..."
                         value={project.description}
                         onChange={(e) => updateField(index, "description", e.target.value)}
+                        style={{ marginTop: 8 }}
                     />
 
                     <input
-                        className="input mb-2"
-                        placeholder="https://github.com/..."
+                        className="round-input"
+                        placeholder="Project Link"
                         value={project.link ?? ""}
                         onChange={(e) => updateField(index, "link", e.target.value)}
+                        style={{ marginTop: 8 }}
                     />
 
                     <input
-                        className="input mb-2"
+                        className="round-input"
                         placeholder="Image URL (optional)"
                         value={project.imageUrl ?? ""}
                         onChange={(e) => updateField(index, "imageUrl", e.target.value)}
+                        style={{ marginTop: 8 }}
                     />
                 </div>
             ))}
 
-            <div className="border border-dashed rounded p-4">
-                <h4 className="font-medium mb-2">Add New Project</h4>
+            {/* Блок додавання нового проекту */}
+            <div className="inner-card" style={{ padding: "18px", marginTop: "20px" }}>
+                <h4 className="section-title" style={{ fontSize: "18px" }}>
+                    Add New Project
+                </h4>
 
                 <input
-                    className="input mb-2"
+                    className="round-input"
                     placeholder="Project Title"
                     value={newProject.title}
                     onChange={(e) => setNewProject({ ...newProject, title: e.target.value })}
+                    style={{ marginTop: 12 }}
                 />
 
                 <textarea
-                    className="input mb-2"
+                    className="round-input"
                     placeholder="Short description..."
                     value={newProject.description}
                     onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
+                    style={{ marginTop: 10 }}
                 />
 
                 <input
-                    className="input mb-2"
+                    className="round-input"
                     placeholder="Project Link"
                     value={newProject.link}
                     onChange={(e) => setNewProject({ ...newProject, link: e.target.value })}
+                    style={{ marginTop: 10 }}
                 />
 
                 <input
-                    className="input mb-2"
+                    className="round-input"
                     placeholder="Image URL (optional)"
                     value={newProject.imageUrl}
                     onChange={(e) => setNewProject({ ...newProject, imageUrl: e.target.value })}
+                    style={{ marginTop: 10 }}
                 />
 
                 <button
-                    className="bg-blue-600 text-white px-4 py-2 rounded w-full"
+                    type="button"
+                    className="purple-btn"
+                    style={{ width: "100%", marginTop: 14 }}
                     onClick={addProject}
                 >
                     + Add Project

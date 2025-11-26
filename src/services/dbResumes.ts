@@ -8,7 +8,7 @@ import {
     get,
 } from "firebase/database";
 import { db } from "./firebase";
-import type {Resume} from "../types/resume";
+import type { Resume } from "../types/resume";
 import { query, orderByChild, equalTo } from "firebase/database";
 
 /**
@@ -26,6 +26,7 @@ export const createResume = async (uid: string) => {
         isPublished: false,
         lastUpdated: Date.now(),
         views: 0,
+        lastViewedBy: {}, // <-- нове поле для аналітики
     };
 
     await set(resumeRef, newResume);
@@ -42,7 +43,6 @@ export const getResumeById = async (resumeId: string) => {
 
 /**
  * Реaltime listener на резюме за ID
- * (використовується у Resume Builder для auto-update)
  */
 export const listenToResume = (resumeId: string, cb: (res: Resume) => void) => {
     onValue(ref(db, `resumes/${resumeId}`), (snap) => {
@@ -52,7 +52,7 @@ export const listenToResume = (resumeId: string, cb: (res: Resume) => void) => {
 };
 
 /**
- * Отримання всіх резюме користувача (Dashboard list)
+ * Отримання всіх резюме користувача (Dashboard)
  */
 export const getUserResumes = (uid: string, cb: (r: Resume[]) => void) => {
     const resumesQuery = query(
@@ -64,7 +64,7 @@ export const getUserResumes = (uid: string, cb: (r: Resume[]) => void) => {
     const unsubscribe = onValue(resumesQuery, (snap) => {
         const data = snap.val();
         if (!data) {
-            cb([]); // немає резюме → повертаємо пустий масив
+            cb([]);
             return;
         }
         cb(Object.values(data));
@@ -74,7 +74,7 @@ export const getUserResumes = (uid: string, cb: (r: Resume[]) => void) => {
 };
 
 /**
- * Оновлення резюме (Autosave)
+ * Оновлення резюме (autosave)
  */
 export const updateResume = async (
     resumeId: string,
@@ -94,7 +94,7 @@ export const deleteResume = async (resumeId: string) => {
 };
 
 /**
- * Публікація резюме (для публічного доступу без Auth)
+ * Публікація
  */
 export const publishResume = async (resumeId: string) => {
     return update(ref(db, `resumes/${resumeId}`), {
@@ -112,3 +112,52 @@ export const unpublishResume = async (resumeId: string) => {
         lastUpdated: Date.now(),
     });
 };
+
+/**
+ * 🔥 АНАЛІТИКА ПЕРЕГЛЯДІВ РЕЗЮМЕ
+ *
+ * - Не рахує автора
+ * - Рахує унікальні перегляди раз на 24 години
+ * - Працює для анонімних і авторизованих
+ */
+export const addResumeView = async (
+    resumeId: string,
+    viewerId: string | null
+) => {
+    const resumeRef = ref(db, `resumes/${resumeId}`);
+    const snap = await get(resumeRef);
+
+    if (!snap.exists()) return;
+
+    const resume = snap.val() as Resume;
+    const now = Date.now();
+
+    // Автор → не рахуємо
+    if (viewerId && viewerId === resume.owner) return;
+
+    const viewLog: Record<string, number> = resume.lastViewedBy || {};
+
+    // Авторизований юзер
+    if (viewerId) {
+        // Переглядав за останні 24 години?
+        if (viewLog[viewerId] && now - viewLog[viewerId] < 86400000) {
+            return;
+        }
+        viewLog[viewerId] = now;
+    } else {
+        // Анонімний користувач
+        const anonKey = `anon_${Math.floor(now / 86400000)}`;
+        if (viewLog[anonKey] && now - viewLog[anonKey] < 86400000) {
+            return;
+        }
+        viewLog[anonKey] = now;
+    }
+
+    await update(resumeRef, {
+        views: (resume.views ?? 0) + 1,
+        lastViewedBy: viewLog,
+        lastUpdated: Date.now(),
+    });
+};
+
+

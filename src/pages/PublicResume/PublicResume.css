@@ -1,0 +1,100 @@
+.pr-root {
+    background: #f5f5f5;
+    min-height: 100vh;
+    padding: 50px 0;
+}
+
+.pr-container {
+    width: 800px;
+    margin: auto;
+    background: white;
+    padding: 40px 50px;
+    border-radius: 20px;
+    box-shadow:
+            0 10px 30px rgba(0,0,0,0.08),
+            0 2px 10px rgba(0,0,0,0.04);
+}
+
+.pr-title {
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 40px;
+}
+
+.pr-section {
+    margin-bottom: 40px;
+}
+
+.pr-section-title {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #333;
+}
+
+.pr-headline {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.pr-text {
+    line-height: 1.7;
+    color: #444;
+}
+
+.pr-list li {
+    margin-bottom: 6px;
+    font-size: 16px;
+}
+
+.pr-exp-item {
+    margin-bottom: 20px;
+}
+
+.pr-exp-item h3 {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+.pr-muted {
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.pr-projects {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+}
+
+.pr-project-card {
+    padding: 18px;
+    background: #fafafa;
+    border-radius: 12px;
+    border: 1px solid #eee;
+}
+
+.pr-project-card a {
+    display: inline-block;
+    margin-top: 6px;
+    color: #007bff;
+}
+
+.pr-contacts p {
+    margin-bottom: 6px;
+}
+
+.pr-video iframe,
+.pr-video video {
+    width: 100%;
+    border-radius: 14px;
+}
+
+.pr-loading,
+.pr-unpublished {
+    text-align: center;
+    margin-top: 150px;
+    color: #666;
+}

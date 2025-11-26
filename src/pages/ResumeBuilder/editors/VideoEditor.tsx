@@ -10,25 +10,35 @@ interface Props {
 
 export default function VideoEditor({ section, onChange }: Props) {
     const { user } = useAuth();
+
     const currentUrl = section.data?.url ?? "";
     const [value, setValue] = useState(currentUrl);
+
     const [uploading, setUploading] = useState(false);
     const [progress, setProgress] = useState(0);
+
     const dropRef = useRef<HTMLDivElement | null>(null);
 
+    // Apply link from input
     const applyLink = () => {
-        onChange({ url: value.trim() });
+        const trimmed = value.trim();
+        onChange({ url: trimmed });
     };
 
-    const handleFile = async (file: File) => {
+    // Upload handler
+    const handleFileUpload = async (file: File) => {
         if (!user) return;
+
         setUploading(true);
         setProgress(0);
 
         try {
-            const uploadedUrl = await uploadUserVideoWithProgress(user.uid, file, (p) =>
-                setProgress(p)
+            const uploadedUrl = await uploadUserVideoWithProgress(
+                user.uid,
+                file,
+                (p) => setProgress(p)
             );
+
             setValue(uploadedUrl);
             onChange({ url: uploadedUrl });
         } finally {
@@ -36,37 +46,42 @@ export default function VideoEditor({ section, onChange }: Props) {
         }
     };
 
+    // File select input
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
-        if (file) handleFile(file);
+        if (file) handleFileUpload(file);
     };
 
-    // ---- DRAG & DROP HANDLERS ----
+    // ----- Drag and drop -----
     const onDragOver = (e: React.DragEvent) => {
         e.preventDefault();
-        dropRef.current?.classList.add("ring", "ring-blue-400");
+        dropRef.current?.classList.add("dd-hover");
     };
 
     const onDragLeave = () => {
-        dropRef.current?.classList.remove("ring", "ring-blue-400");
+        dropRef.current?.classList.remove("dd-hover");
     };
 
     const onDrop = (e: React.DragEvent) => {
         e.preventDefault();
-        dropRef.current?.classList.remove("ring", "ring-blue-400");
+        dropRef.current?.classList.remove("dd-hover");
         const file = e.dataTransfer.files?.[0];
-        if (file) handleFile(file);
+        if (file) handleFileUpload(file);
     };
 
     return (
-        <div className="space-y-6 max-w-xl">
+        <div className="inner-card" style={{ padding: "20px" }}>
 
-            {/* ВАРІАНТ 1: ЛІНК */}
-            <div className="p-4 border rounded-lg space-y-3 bg-white">
-                <p className="text-sm text-gray-600">Insert a video link:</p>
+            {/* ===================== */}
+            {/* 1 — INPUT BY URL     */}
+            {/* ===================== */}
+            <div className="inner-card" style={{ padding: "18px", marginBottom: "22px" }}>
+                <p className="input-label" style={{ marginBottom: "8px" }}>
+                    Insert a video link:
+                </p>
 
                 <input
-                    className="input"
+                    className="round-input"
                     placeholder="https://youtube.com/watch?v=..."
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
@@ -74,20 +89,25 @@ export default function VideoEditor({ section, onChange }: Props) {
 
                 <button
                     onClick={applyLink}
-                    className="bg-blue-600 text-white px-4 py-2 rounded"
+                    className="purple-btn"
+                    style={{ marginTop: "12px", width: "100%" }}
                 >
                     Save Link
                 </button>
             </div>
 
-            {/* ВАРІАНТ 2: ЗАВАНТАЖЕННЯ */}
-            <div className="p-4 border rounded-lg bg-white space-y-4">
-                <p className="text-sm text-gray-600">Or upload a video:</p>
+            {/* ===================== */}
+            {/* 2 — FILE UPLOAD       */}
+            {/* ===================== */}
+            <div className="inner-card" style={{ padding: "18px" }}>
+                <p className="input-label" style={{ marginBottom: "10px" }}>
+                    Or upload a video:
+                </p>
 
                 {/* DRAG & DROP AREA */}
                 <div
                     ref={dropRef}
-                    className="border-2 border-dashed rounded-lg p-6 text-center text-gray-500 cursor-pointer transition"
+                    className="video-drop-area"
                     onDragOver={onDragOver}
                     onDragLeave={onDragLeave}
                     onDrop={onDrop}
@@ -96,27 +116,36 @@ export default function VideoEditor({ section, onChange }: Props) {
                 </div>
 
                 {/* FILE INPUT */}
-                <input type="file" accept="video/*" onChange={handleFileSelect} />
+                <input
+                    type="file"
+                    accept="video/*"
+                    onChange={handleFileSelect}
+                    className="round-input"
+                    style={{ marginTop: "10px", padding: "10px" }}
+                />
 
-                {/* PROGRESS BAR */}
+                {/* Upload progress bar */}
                 {uploading && (
-                    <div className="w-full bg-gray-200 rounded h-3 overflow-hidden">
+                    <div className="upload-progress">
                         <div
-                            className="bg-blue-600 h-full transition-all"
+                            className="upload-progress-fill"
                             style={{ width: `${progress}%` }}
                         />
                     </div>
                 )}
             </div>
 
-            {/* ПРЕВ'Ю */}
+            {/* ===================== */}
+            {/* 3 — VIDEO PREVIEW     */}
+            {/* ===================== */}
             {value && !uploading && (
-                <div className="mt-6">
-                    <p className="text-sm text-gray-600 mb-2">Preview:</p>
+                <div style={{ marginTop: "28px" }}>
+                    <p className="input-label" style={{ marginBottom: "8px" }}>Preview:</p>
 
+                    {/* YouTube */}
                     {value.includes("youtube") || value.includes("youtu.be") ? (
                         <iframe
-                            className="w-full rounded aspect-video"
+                            className="video-preview"
                             src={value
                                 .replace("watch?v=", "embed/")
                                 .replace("youtu.be/", "youtube.com/embed/")
@@ -124,7 +153,7 @@ export default function VideoEditor({ section, onChange }: Props) {
                             allowFullScreen
                         />
                     ) : (
-                        <video className="w-full rounded" src={value} controls />
+                        <video className="video-preview" src={value} controls />
                     )}
                 </div>
             )}

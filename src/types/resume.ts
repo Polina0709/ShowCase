@@ -6,6 +6,7 @@ export interface Resume {
     isPublished: boolean;
     lastUpdated: number;
     views: number;
+    lastViewedBy?: Record<string, number>;
 }
 
 export type ResumeSection =

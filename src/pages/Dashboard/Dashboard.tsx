@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { createResume, getUserResumes } from "../../services/dbResumes";
+import { createResume, getUserResumes, deleteResume } from "../../services/dbResumes";
 import type { Resume } from "../../types/resume";
 import { signOut } from "firebase/auth";
 import { auth } from "../../services/firebase";
@@ -60,6 +60,11 @@ export default function Dashboard() {
         navigate(`/builder/${newResume.id}`);
     };
 
+    const handleDelete = async (id: string) => {
+        if (!window.confirm("Delete this resume permanently?")) return;
+        await deleteResume(id);
+    };
+
     const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file || !user) return;
@@ -112,7 +117,6 @@ export default function Dashboard() {
                         />
                     </div>
 
-                    {/* ✅ Кнопка редагування профілю тепер ТУТ */}
                     <button
                         className="dash-profile-edit"
                         onClick={() => navigate("/profile")}
@@ -146,21 +150,22 @@ export default function Dashboard() {
 
                 {/* RESUME LIST */}
                 <section className="dash-resumes">
-                    {/* ✅ Кнопка додавання резюме тепер тут */}
-                    <button className="dash-add" onClick={handleCreate} title="Create resume">
-                        +
-                    </button>
 
-                    {resumes.length === 0 ? (
-                        <button onClick={handleCreate} className="dash-empty">
-                            <span className="dash-empty-plus">+</span>
-                            <span>
-                ADD <br />
-                YOUR FIRST CV
-              </span>
+                    {/* CASE 1 — NO RESUMES */}
+                    {resumes.length === 0 && (
+                        <button className="dash-first-card" onClick={handleCreate}>
+                            <div className="dash-first-plus">+</div>
+                            <div className="dash-first-text">
+                                ADD <br /> YOUR FIRST CV
+                            </div>
                         </button>
-                    ) : (
+                    )}
+
+                    {/* CASE 2 — RESUME GRID */}
+                    {resumes.length > 0 && (
                         <div className="dash-cards">
+
+                            {/* Resume cards */}
                             {resumes.map((resume) => (
                                 <div
                                     key={resume.id}
@@ -172,11 +177,38 @@ export default function Dashboard() {
                                     )}
 
                                     <div className="dash-card-title">{resume.title}</div>
+
                                     <div className="dash-card-meta">
                                         <span>{resume.views} views</span>
                                     </div>
+
+                                    <button
+                                        className="dash-card-delete"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDelete(resume.id);
+                                        }}
+                                    >
+                                        ✕
+                                    </button>
+
+                                    {resume.isPublished && (
+                                        <a
+                                            href={`/r/${resume.id}`}
+                                            className="dash-card-view"
+                                            target="_blank"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
+                                            View →
+                                        </a>
+                                    )}
                                 </div>
                             ))}
+
+                            {/* Floating + but positioned after all cards */}
+                            <button className="dash-add-circle" onClick={handleCreate}>
+                                +
+                            </button>
                         </div>
                     )}
                 </section>
@@ -184,3 +216,4 @@ export default function Dashboard() {
         </div>
     );
 }
+

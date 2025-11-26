@@ -46,7 +46,7 @@ export default function SectionEditor({ resume, saveChanges }: Props) {
         saveChanges({ sections: updated });
     };
 
-    /** ✅ Типобезпечне оновлення секцій */
+    /** Типобезпечне оновлення секцій */
     const updateSectionData = <T extends ResumeSection>(index: number, data: T["data"]) => {
         const updated = [...sections];
         updated[index] = { ...updated[index], data } as T;
@@ -105,7 +105,11 @@ export default function SectionEditor({ resume, saveChanges }: Props) {
                 );
 
             default:
-                return <p className="text-gray-400 text-sm">Unknown section</p>;
+                return (
+                    <p className="empty-text">
+                        Unknown section
+                    </p>
+                );
         }
     };
 
@@ -114,12 +118,17 @@ export default function SectionEditor({ resume, saveChanges }: Props) {
             <Droppable droppableId="sections">
                 {(provided) => (
                     <div ref={provided.innerRef} {...provided.droppableProps}>
+
+                        {/* No sections */}
                         {sections.length === 0 && (
-                            <div className="text-center text-gray-400 py-14">
-                                No sections yet.<br />
+                            <div className="soft-card" style={{ textAlign: "center", padding: "40px" }}>
+                                <p style={{ color: "rgba(0,0,0,0.45)" }}>
+                                    No sections yet.
+                                </p>
                             </div>
                         )}
 
+                        {/* Render sections */}
                         {sections.map((section, index) => (
                             <Draggable key={section.id} draggableId={section.id} index={index}>
                                 {(provided) => (
@@ -127,21 +136,29 @@ export default function SectionEditor({ resume, saveChanges }: Props) {
                                         ref={provided.innerRef}
                                         {...provided.draggableProps}
                                         {...provided.dragHandleProps}
-                                        className="mb-6 border border-gray-200 rounded-xl p-5 bg-white shadow-sm"
+                                        className="section-card"
                                     >
-                                        <div className="flex justify-between items-center mb-3">
-                                            <h3 className="font-semibold text-lg capitalize">
+                                        {/* Section header */}
+                                        <div className="section-header">
+                                            <h3 style={{
+                                                fontSize: "20px",
+                                                fontWeight: 600,
+                                                textTransform: "capitalize"
+                                            }}>
                                                 {section.type}
                                             </h3>
+
                                             <button
                                                 onClick={() => removeSection(index)}
-                                                className="text-red-500 text-sm hover:underline"
+                                                className="remove-btn"
                                             >
                                                 Remove
                                             </button>
                                         </div>
 
+                                        {/* Section content */}
                                         {renderEditor(section, index)}
+
                                     </div>
                                 )}
                             </Draggable>
@@ -154,4 +171,3 @@ export default function SectionEditor({ resume, saveChanges }: Props) {
         </DragDropContext>
     );
 }
-

@@ -209,10 +209,36 @@
     box-shadow: 0 12px 26px rgba(0,0,0,.18);
 }
 
+/* === FIRST RESUME CARD === */
+.dash-first-card {
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-family: Aboreto, serif;
+}
+
+.dash-first-plus {
+    font-size: 36px;
+    line-height: 42px;
+    margin-bottom: 14px;
+}
+.dash-first-text {
+    text-align: center;
+    letter-spacing: 1px;
+    font-size: 22px;
+    font-weight: 500;
+}
+
 /* + Button inside resumes panel */
 .dash-add {
     position: absolute;
-    top: 20px;
+    top: 45px;
     right: 20px;
     width: 48px;
     height: 48px;
@@ -281,4 +307,111 @@
     font-size: 11px;
     font-weight: 600;
 }
+
+/* контейнер карток */
+.dash-card {
+    width: 250px;
+    height: 125px;
+
+    border-radius: 22px;
+    background: rgba(255,255,255,0.55);
+    border: 1px solid rgba(255,255,255,0.35);
+    backdrop-filter: blur(10px);
+
+    box-shadow: 0 6px 20px rgba(0,0,0,0.10);
+
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    position: relative;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+/* кругла кнопка add */
+.dash-add-circle {
+    margin-top: 30px;
+    width: 50px;
+    height: 50px;
+
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 36px;
+    color: rgba(0, 0, 0, 0.65);
+    cursor: pointer;
+
+    transition: 0.25s ease;
+}
+
+/* hover-ефект */
+.dash-add-circle:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.75);
+}
+
+/* знак "+" всередині */
+.dash-add-circle span {
+    user-select: none;
+}
+
+.dash-card-delete {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(255, 0, 0, 0.75);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    font-size: 16px;
+    line-height: 26px;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.dash-card-delete:hover {
+    background: red;
+}
+.dash-card-add {
+    width: 230px;           /* такий самий розмір як інші картки */
+    height: 150px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.35);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    transition: 0.25s ease;
+}
+
+.dash-card-add:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 22px rgba(0,0,0,0.15);
+}
+
+.dash-card-add-plus {
+    font-size: 48px;
+    font-weight: 300;
+    color: rgba(0,0,0,0.55);
+}
+
+
 

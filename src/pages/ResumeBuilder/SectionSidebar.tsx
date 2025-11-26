@@ -1,4 +1,6 @@
 import type { Resume, ResumeSection } from "../../types/resume";
+import "./resume-builder.css";
+
 
 interface Props {
     resume: Resume;
@@ -56,17 +58,36 @@ export default function SectionSidebar({ resume, saveChanges }: Props) {
     };
 
     return (
-        <div className="w-64 bg-gray-50 border-r border-gray-200 p-6 space-y-4">
-            <br/>
-            <br/>
-            <h3 className="font-semibold text-lg mb-2">Add Section</h3>
+        <div className="sidebar">
 
-            <button className="sidebar-btn" onClick={() => addSection("about")}>+ About</button>
-            <button className="sidebar-btn" onClick={() => addSection("skills")}>+ Skills</button>
-            <button className="sidebar-btn" onClick={() => addSection("experience")}>+ Experience</button>
-            <button className="sidebar-btn" onClick={() => addSection("projects")}>+ Projects</button>
-            <button className="sidebar-btn" onClick={() => addSection("contacts")}>+ Contacts</button>
-            <button className="sidebar-btn" onClick={() => addSection("video")}>+ Pitch Video</button>
+            <h3 className="section-title" style={{ marginBottom: "6px" }}>
+                Add Section
+            </h3>
+
+            <button className="sidebar-btn" onClick={() => addSection("about")}>
+                + About
+            </button>
+
+            <button className="sidebar-btn" onClick={() => addSection("skills")}>
+                + Skills
+            </button>
+
+            <button className="sidebar-btn" onClick={() => addSection("experience")}>
+                + Experience
+            </button>
+
+            <button className="sidebar-btn" onClick={() => addSection("projects")}>
+                + Projects
+            </button>
+
+            <button className="sidebar-btn" onClick={() => addSection("contacts")}>
+                + Contacts
+            </button>
+
+            <button className="sidebar-btn" onClick={() => addSection("video")}>
+                + Pitch Video
+            </button>
+
         </div>
     );
 }
