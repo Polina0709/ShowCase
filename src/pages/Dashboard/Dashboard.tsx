@@ -77,6 +77,7 @@ export default function Dashboard() {
         <div className="dash-root" style={{ backgroundImage: `url(${bg})` }}>
             {/* HEADER */}
             <header className="dash-header">
+
                 <h1 className="dash-brand">SHOWCASE</h1>
 
                 <div className="dash-header-actions">
@@ -140,8 +141,12 @@ export default function Dashboard() {
                         <label>Phone number:</label>
                         <div>{profile.phone || "—"}</div>
 
+                        <br/>
+
                         <label>Email:</label>
                         <div>{profile.email}</div>
+
+                        <br/>
 
                         <label>LinkedIn:</label>
                         <div>{profile.linkedin || "—"}</div>
@@ -205,7 +210,6 @@ export default function Dashboard() {
                                 </div>
                             ))}
 
-                            {/* Floating + but positioned after all cards */}
                             <button className="dash-add-circle" onClick={handleCreate}>
                                 +
                             </button>

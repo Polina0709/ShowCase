@@ -15,7 +15,7 @@ import { query, orderByChild, equalTo } from "firebase/database";
  * Створення нового резюме (чернетки)
  */
 export const createResume = async (uid: string) => {
-    const resumeRef = push(ref(db, "resumes")); // генеруємо унікальний ID
+    const resumeRef = push(ref(db, "resumes"));
     const id = resumeRef.key as string;
 
     const newResume: Resume = {
@@ -26,7 +26,7 @@ export const createResume = async (uid: string) => {
         isPublished: false,
         lastUpdated: Date.now(),
         views: 0,
-        lastViewedBy: {}, // <-- нове поле для аналітики
+        lastViewedBy: {},
     };
 
     await set(resumeRef, newResume);
@@ -113,13 +113,6 @@ export const unpublishResume = async (resumeId: string) => {
     });
 };
 
-/**
- * 🔥 АНАЛІТИКА ПЕРЕГЛЯДІВ РЕЗЮМЕ
- *
- * - Не рахує автора
- * - Рахує унікальні перегляди раз на 24 години
- * - Працює для анонімних і авторизованих
- */
 export const addResumeView = async (
     resumeId: string,
     viewerId: string | null
@@ -132,20 +125,16 @@ export const addResumeView = async (
     const resume = snap.val() as Resume;
     const now = Date.now();
 
-    // Автор → не рахуємо
     if (viewerId && viewerId === resume.owner) return;
 
     const viewLog: Record<string, number> = resume.lastViewedBy || {};
 
-    // Авторизований юзер
     if (viewerId) {
-        // Переглядав за останні 24 години?
         if (viewLog[viewerId] && now - viewLog[viewerId] < 86400000) {
             return;
         }
         viewLog[viewerId] = now;
     } else {
-        // Анонімний користувач
         const anonKey = `anon_${Math.floor(now / 86400000)}`;
         if (viewLog[anonKey] && now - viewLog[anonKey] < 86400000) {
             return;
@@ -157,6 +146,16 @@ export const addResumeView = async (
         views: (resume.views ?? 0) + 1,
         lastViewedBy: viewLog,
         lastUpdated: Date.now(),
+    });
+};
+
+import { runTransaction } from "firebase/database";
+
+export const incrementResumeViews = async (resumeId: string) => {
+    const viewsRef = ref(db, `resumes/${resumeId}/views`);
+
+    await runTransaction(viewsRef, (current) => {
+        return (current || 0) + 1;
     });
 };
 

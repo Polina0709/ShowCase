@@ -31,7 +31,7 @@ export const uploadUserPhoto = async (uid: string, file: File) => {
 };
 
 /**
- * ✅ Завантаження відео користувача + прогрес
+ * Завантаження відео користувача
  */
 export async function uploadUserVideoWithProgress(
     uid: string,

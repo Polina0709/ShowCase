@@ -9,7 +9,6 @@ interface Props {
 export default function AboutEditor({ section, onChange }: Props) {
     const [value, setValue] = useState(section.data);
 
-    // Debounce 500ms
     useEffect(() => {
         const timeout = setTimeout(() => onChange(value), 500);
         return () => clearTimeout(timeout);

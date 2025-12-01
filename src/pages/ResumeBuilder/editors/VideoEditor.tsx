@@ -5,13 +5,17 @@ import { useAuth } from "../../../hooks/useAuth";
 
 interface Props {
     section: VideoSection;
-    onChange: (data: VideoSection["data"]) => void;
+    onChange: (data: {
+        videoUrl: string;
+        url: string;
+    }) => void;
 }
 
 export default function VideoEditor({ section, onChange }: Props) {
     const { user } = useAuth();
 
     const currentUrl = section.data?.url ?? "";
+
     const [value, setValue] = useState(currentUrl);
 
     const [uploading, setUploading] = useState(false);
@@ -19,13 +23,21 @@ export default function VideoEditor({ section, onChange }: Props) {
 
     const dropRef = useRef<HTMLDivElement | null>(null);
 
-    // Apply link from input
+    /* ============================
+       APPLY LINK
+    ============================= */
     const applyLink = () => {
         const trimmed = value.trim();
-        onChange({ url: trimmed });
+
+        onChange({
+            url: trimmed,
+            videoUrl: trimmed
+        });
     };
 
-    // Upload handler
+    /* ============================
+       FILE UPLOAD
+    ============================= */
     const handleFileUpload = async (file: File) => {
         if (!user) return;
 
@@ -40,19 +52,25 @@ export default function VideoEditor({ section, onChange }: Props) {
             );
 
             setValue(uploadedUrl);
-            onChange({ url: uploadedUrl });
+
+            onChange({
+                url: uploadedUrl,
+                videoUrl: uploadedUrl
+            });
+
         } finally {
             setUploading(false);
         }
     };
 
-    // File select input
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) handleFileUpload(file);
     };
 
-    // ----- Drag and drop -----
+    /* ============================
+       DRAG & DROP
+    ============================= */
     const onDragOver = (e: React.DragEvent) => {
         e.preventDefault();
         dropRef.current?.classList.add("dd-hover");
@@ -69,12 +87,13 @@ export default function VideoEditor({ section, onChange }: Props) {
         if (file) handleFileUpload(file);
     };
 
+    /* ============================
+       RENDER
+    ============================= */
     return (
         <div className="inner-card" style={{ padding: "20px" }}>
 
-            {/* ===================== */}
-            {/* 1 — INPUT BY URL     */}
-            {/* ===================== */}
+            {/* URL INPUT */}
             <div className="inner-card" style={{ padding: "18px", marginBottom: "22px" }}>
                 <p className="input-label" style={{ marginBottom: "8px" }}>
                     Insert a video link:
@@ -96,15 +115,12 @@ export default function VideoEditor({ section, onChange }: Props) {
                 </button>
             </div>
 
-            {/* ===================== */}
-            {/* 2 — FILE UPLOAD       */}
-            {/* ===================== */}
+            {/* FILE UPLOAD */}
             <div className="inner-card" style={{ padding: "18px" }}>
                 <p className="input-label" style={{ marginBottom: "10px" }}>
                     Or upload a video:
                 </p>
 
-                {/* DRAG & DROP AREA */}
                 <div
                     ref={dropRef}
                     className="video-drop-area"
@@ -115,7 +131,6 @@ export default function VideoEditor({ section, onChange }: Props) {
                     Drag & Drop video here
                 </div>
 
-                {/* FILE INPUT */}
                 <input
                     type="file"
                     accept="video/*"
@@ -124,7 +139,6 @@ export default function VideoEditor({ section, onChange }: Props) {
                     style={{ marginTop: "10px", padding: "10px" }}
                 />
 
-                {/* Upload progress bar */}
                 {uploading && (
                     <div className="upload-progress">
                         <div
@@ -135,14 +149,13 @@ export default function VideoEditor({ section, onChange }: Props) {
                 )}
             </div>
 
-            {/* ===================== */}
-            {/* 3 — VIDEO PREVIEW     */}
-            {/* ===================== */}
+            {/* PREVIEW */}
             {value && !uploading && (
                 <div style={{ marginTop: "28px" }}>
-                    <p className="input-label" style={{ marginBottom: "8px" }}>Preview:</p>
+                    <p className="input-label" style={{ marginBottom: "8px" }}>
+                        Preview:
+                    </p>
 
-                    {/* YouTube */}
                     {value.includes("youtube") || value.includes("youtu.be") ? (
                         <iframe
                             className="video-preview"
@@ -160,3 +173,4 @@ export default function VideoEditor({ section, onChange }: Props) {
         </div>
     );
 }
+

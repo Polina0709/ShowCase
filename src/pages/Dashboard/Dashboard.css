@@ -20,7 +20,6 @@
     font-family: Akatab, sans-serif;
 }
 
-/* Soft gradient overlay to reduce brightness */
 .dash-root::before {
     content: "";
     position: absolute;
@@ -35,7 +34,6 @@
     position: relative;
     z-index: 1;
 }
-
 
 /* HEADER */
 .dash-header {
@@ -81,20 +79,61 @@
     background: rgba(255,255,255,0.9);
 }
 
+@media (max-width: 600px) {
+    .dash-header-actions {
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%) scale(0.9);
+    }
 
-/* GRID */
+    .dash-logout {
+        padding: 6px 14px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dash-header {
+        padding-right: 70px;
+    }
+
+    .dash-header-actions {
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%) scale(0.8);
+        gap: 6px;
+    }
+
+    .dash-logout {
+        padding: 5px 12px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 380px) {
+    .dash-logout {
+        padding: 4px 10px;
+        font-size: 11px;
+    }
+
+    .dash-header-actions {
+        transform: translateY(-50%) scale(0.75);
+    }
+}
+
+/* GRID LAYOUT */
 .dash-grid {
     display: grid;
     grid-template-columns: 360px 1fr;
     gap: 32px;
 }
 
+/* MOBILE: Profile moves above resumes */
 @media (max-width: 1020px) {
     .dash-grid {
         grid-template-columns: 1fr;
     }
 }
-
 
 /* PROFILE PANEL */
 .dash-profile {
@@ -103,11 +142,9 @@
     border-radius: 28px;
     padding: 30px 24px 38px;
     box-shadow: 0 12px 28px rgba(0,0,0,.18);
-    text-align: left;
     position: relative;
 }
 
-/* Edit Profile Button Inside Profile Card */
 .dash-profile-edit {
     position: absolute;
     top: 18px;
@@ -125,7 +162,6 @@
     background: rgba(255,255,255,0.9);
 }
 
-
 /* AVATAR */
 .dash-avatar-wrap {
     position: relative;
@@ -139,7 +175,6 @@
     height: 100%;
     border-radius: 999px;
     overflow: hidden;
-    background: #ddd;
 }
 
 .dash-avatar img {
@@ -154,8 +189,6 @@
     font-size: 64px;
     background: #eee;
     color: #666;
-    width: 100%;
-    height: 100%;
 }
 
 /* Attach photo */
@@ -165,15 +198,14 @@
     bottom: 6px;
     width: 44px;
     height: 44px;
-    border-radius: 999px;
+    border-radius: 50%;
     border: none;
     background: white;
-    cursor: pointer;
     box-shadow: 0 6px 16px rgba(0,0,0,.18);
     display: grid;
     place-items: center;
+    cursor: pointer;
 }
-
 
 /* PROFILE TEXT */
 .dash-name {
@@ -188,7 +220,6 @@
     text-align: center;
     font-size: 14px;
     opacity: 0.75;
-    margin-top: 6px;
 }
 
 .dash-info {
@@ -196,7 +227,6 @@
     line-height: 1.6;
     font-size: 14px;
 }
-
 
 /* RESUME LIST PANEL */
 .dash-resumes {
@@ -234,84 +264,17 @@
     font-size: 22px;
     font-weight: 500;
 }
-
-/* + Button inside resumes panel */
-.dash-add {
-    position: absolute;
-    top: 45px;
-    right: 20px;
-    width: 48px;
-    height: 48px;
-    border-radius: 999px;
-    background: white;
-    border: none;
-    box-shadow: 0 6px 14px rgba(0,0,0,.18);
-    font-size: 26px;
-    cursor: pointer;
-    transition: 0.25s;
-}
-.dash-add:hover {
-    transform: translateY(-3px);
-}
-
-
-/* EMPTY STATE */
-.dash-empty {
-    border: 2px dashed rgba(0,0,0,.18);
-    border-radius: 24px;
-    background: transparent;
-    display: grid;
-    place-items: center;
-    text-align: center;
-    cursor: pointer;
-    color: #111;
-    padding: 40px;
-}
-.dash-empty:hover {
-    background: rgba(255,255,255,.4);
-}
-
-
-/* RESUME CARDS */
+/* GRID OF CARDS — RESPONSIVE */
 .dash-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 20px;
 }
 
+/* RESUME CARD */
 .dash-card {
-    background: rgba(255,255,255,.8);
-    border-radius: 18px;
-    padding: 18px;
-    box-shadow: 0 6px 18px rgba(0,0,0,.12);
-    cursor: pointer;
-    transition: 0.25s;
-    position: relative;
-}
-
-.dash-card:hover {
-    transform: translateY(-3px);
-}
-
-.dash-card.draft {
-    opacity: 0.6;
-}
-
-.dash-card-badge {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    background: #ffeb73;
-    padding: 2px 8px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 600;
-}
-
-/* контейнер карток */
-.dash-card {
-    width: 250px;
-    height: 125px;
+    width: 100%;
+    min-height: 140px;
 
     border-radius: 22px;
     background: rgba(255,255,255,0.55);
@@ -330,41 +293,26 @@
     transition: 0.25s ease;
 }
 
-/* кругла кнопка add */
-.dash-add-circle {
-    margin-top: 30px;
-    width: 50px;
-    height: 50px;
-
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.55);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    font-size: 36px;
-    color: rgba(0, 0, 0, 0.65);
-    cursor: pointer;
-
-    transition: 0.25s ease;
+.dash-card:hover {
+    transform: translateY(-3px);
 }
 
-/* hover-ефект */
-.dash-add-circle:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
-    background: rgba(255, 255, 255, 0.75);
+.dash-card.draft {
+    opacity: 0.6;
 }
 
-/* знак "+" всередині */
-.dash-add-circle span {
-    user-select: none;
+.dash-card-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    background: #ffeb73;
 }
 
+/* DELETE BUTTON */
 .dash-card-delete {
     position: absolute;
     bottom: 10px;
@@ -379,39 +327,61 @@
     line-height: 26px;
     text-align: center;
     cursor: pointer;
-    transition: background 0.2s;
 }
-
 .dash-card-delete:hover {
     background: red;
 }
-.dash-card-add {
-    width: 230px;           /* такий самий розмір як інші картки */
-    height: 150px;
-    border-radius: 20px;
-    background: rgba(255,255,255,0.55);
+
+/* "+" BUTTON AT END OF GRID */
+.dash-add-circle {
+    width: 52px;
+    height: 52px;
+
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.55);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.35);
-    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
 
     display: flex;
     justify-content: center;
     align-items: center;
+
+    font-size: 32px;
+    color: rgba(0, 0, 0, 0.65);
     cursor: pointer;
 
     transition: 0.25s ease;
+
+    margin: 0;
+    justify-self: left;
+    align-self: center;
 }
 
-.dash-card-add:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 22px rgba(0,0,0,0.15);
+.dash-add-circle:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
 }
 
-.dash-card-add-plus {
-    font-size: 48px;
-    font-weight: 300;
-    color: rgba(0,0,0,0.55);
+/* MOBILE FIXES */
+@media (max-width: 600px) {
+    .dash-root {
+        padding: 16px;
+    }
+
+    .dash-profile {
+        padding: 24px;
+    }
+
+    .dash-resumes {
+        padding: 20px;
+    }
+
+    .dash-add-circle {
+        width: 52px;
+        height: 52px;
+        font-size: 32px;
+
+        justify-self: center;
+    }
 }
-
-
-

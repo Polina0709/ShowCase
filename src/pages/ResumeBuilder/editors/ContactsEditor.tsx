@@ -9,20 +9,16 @@ interface Props {
 export default function ContactsEditor({ section, onChange }: Props) {
     const initial: ResumeContactsData = section.data ?? {};
 
-    // локальний стан — миттєвий, без лагів
     const [form, setForm] = useState<ResumeContactsData>(initial);
 
-    // синхронізація ззовні (коли міняється секція)
     useEffect(() => {
         setForm(initial);
     }, [section.id]);
 
-    // оновлення конкретного поля
     const updateField = (field: keyof ResumeContactsData, value: string) => {
         setForm((prev) => ({ ...prev, [field]: value }));
     };
 
-    // відправляємо у resume тільки після завершення вводу
     const commit = () => {
         onChange(form);
     };

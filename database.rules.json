@@ -1,22 +1,22 @@
 {
   "rules": {
+    "resumes": {
+      "$id": {
+        ".read": true,
+        ".write": "auth != null && (
+        !data.exists() || data.child('owner').val() === auth.uid
+        )"
+      }
+    },
+
     "users": {
       "$uid": {
-        ".read": "$uid === auth.uid",
-        ".write": "$uid === auth.uid"
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
       }
     },
-    "resumes": {
-      "$resumeId": {
-        ".read": "data.child('isPublished').val() === true || data.child('owner').val() === auth.uid",
-        ".write": "data.child('owner').val() === auth.uid"
-      }
-    },
-    "analytics": {
-      "$resumeId": {
-        ".read": true,
-        ".write": "auth != null"
-      }
-    }
+
+    ".read": true,
+    ".write": false
   }
 }

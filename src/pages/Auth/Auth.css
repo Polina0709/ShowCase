@@ -5,6 +5,7 @@
     box-sizing: border-box;
 }
 
+/* ROOT */
 .auth-root {
     height: 100vh;
     width: 100vw;
@@ -15,10 +16,13 @@
     align-items: center;
     justify-content: center;
     font-family: Akatab, sans-serif;
+    padding: 1rem;
 }
 
+/* CARD */
 .auth-card {
     width: 380px;
+    max-width: 100%;
     background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.25));
     backdrop-filter: blur(25px);
     border-radius: 40px;
@@ -27,8 +31,10 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
+    position: relative;
 }
 
+/* BACK ARROW */
 .auth-back {
     position: absolute;
     left: 1.5rem;
@@ -38,13 +44,14 @@
     opacity: 0.8;
 }
 
+/* TITLES */
 .auth-title {
     text-align: center;
     font-family: Aboreto, sans-serif;
     font-size: 2.5rem;
     color: #fff;
     letter-spacing: 2px;
-    margin-top: 0;
+    margin-top: 0.5rem;
 }
 
 .auth-subtitle {
@@ -57,6 +64,7 @@
     letter-spacing: 1px;
 }
 
+/* GOOGLE SIGN-IN */
 .auth-google {
     display: flex;
     align-items: center;
@@ -78,11 +86,11 @@
     margin: 0.5rem;
 }
 
-
 .auth-google:hover {
     background: rgba(255,255,255,0.5);
 }
 
+/* FORM */
 .auth-form {
     display: flex;
     flex-direction: column;
@@ -90,16 +98,23 @@
     margin-top: 1.5rem;
 }
 
+/* --- ROW FIX: Name + Last Name --- */
 .auth-row {
     display: flex;
     gap: 0.8rem;
     width: 100%;
+    flex-wrap: wrap;
 }
 
-.auth-row input {
+.auth-row > div {
+    flex: 1 1 160px;
+}
+
+.auth-row .auth-input {
     width: 100%;
 }
 
+/* INPUT */
 .auth-input {
     flex: 1;
     border: none;
@@ -115,6 +130,7 @@
     color: rgba(0,0,0,0.5);
 }
 
+/* FOOTER */
 .auth-footer {
     text-align: center;
     font-family: Akatab, sans-serif;
@@ -129,6 +145,7 @@
     text-decoration: none;
 }
 
+/* SUBMIT BUTTON */
 .auth-submit {
     background: white;
     border: none;
@@ -151,6 +168,7 @@
     box-shadow: 0 5px 14px rgba(0,0,0,0.2);
 }
 
+/* FORGOT PASSWORD */
 .auth-forgot {
     background: rgba(255,255,255,0.9);
     border: none;
@@ -161,9 +179,37 @@
     margin-left: 0.5rem;
 }
 
+/* ERRORS */
 .auth-error {
     font-size: 0.75rem;
     color: #ff3d3d;
     margin-top: -0.3rem;
     margin-left: 0.6rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 480px) {
+    .auth-card {
+        padding: 2rem 1.5rem;
+        border-radius: 30px;
+    }
+
+    .auth-title {
+        font-size: 2rem;
+    }
+
+    .auth-row {
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .auth-row > div {
+        width: 100%;
+        flex: unset;
+    }
+
+    .auth-submit {
+        width: 42px;
+        height: 42px;
+    }
 }

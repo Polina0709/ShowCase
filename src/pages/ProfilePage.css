@@ -9,7 +9,6 @@
     font-family: Akatab, sans-serif;
 }
 
-/* Soft gradient overlay to reduce brightness */
 .profile-root::before {
     content: "";
     position: absolute;

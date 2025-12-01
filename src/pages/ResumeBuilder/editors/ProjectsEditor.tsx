@@ -8,62 +8,43 @@ interface Props {
 }
 
 export default function ProjectsEditor({ section, onChange }: Props) {
-    const [projects, setProjects] = useState<ResumeProjectItem[]>(section.data?.projects ?? []);
+    const [projects, setProjects] = useState<ResumeProjectItem[]>(
+        section.data?.projects ?? []
+    );
 
-    // синхронізація, якщо ззовні змінилась секція
     useEffect(() => {
         setProjects(section.data?.projects ?? []);
-    }, [section.id]);
+    }, [section.id, section.data]);
 
     const sync = (updated: ResumeProjectItem[]) => {
         setProjects(updated);
         onChange({ projects: updated });
     };
 
-    const [newProject, setNewProject] = useState({
-        title: "",
-        description: "",
-        link: "",
-        imageUrl: "",
-    });
-
     const addProject = () => {
-        const trimmedTitle = newProject.title.trim();
-
-        if (!trimmedTitle) {
-            // ❗ ось тут тепер видно, що саме не так
-            alert("Please enter Project Title before adding a project 🙂");
-            return;
-        }
-
         const project: ResumeProjectItem = {
             id: uuid(),
-            title: trimmedTitle,
-            description: newProject.description.trim(),
-            link: newProject.link || undefined,
-            imageUrl: newProject.imageUrl || undefined,
-        };
-
-        const updated = [...projects, project];
-        sync(updated);
-
-        setNewProject({
             title: "",
             description: "",
             link: "",
             imageUrl: "",
-        });
+        };
+
+        sync([...projects, project]);
     };
 
-    const updateField = (index: number, field: keyof ResumeProjectItem, value: string) => {
+    const updateField = (
+        index: number,
+        field: keyof ResumeProjectItem,
+        value: string
+    ) => {
         const updated = [...projects];
         updated[index] = { ...updated[index], [field]: value };
         sync(updated);
     };
 
     const removeProject = (index: number) => {
-        const updated = projects.filter((_, i) => i !== index);
-        sync(updated);
+        sync(projects.filter((_, i) => i !== index));
     };
 
     return (
@@ -72,27 +53,37 @@ export default function ProjectsEditor({ section, onChange }: Props) {
                 <div
                     key={project.id}
                     className="inner-card"
-                    style={{ padding: "18px", marginBottom: "16px" }}
+                    style={{
+                        padding: "18px",
+                        marginBottom: "16px",
+                        border: "1px solid #ddd",
+                        borderRadius: "12px",
+                        position: "relative"
+                    }}
                 >
-                    <div className="section-header">
-                        <h4 style={{ fontSize: "16px", fontWeight: 600 }}>
-                            {project.title || "Project"}
-                        </h4>
+                    <button
+                        type="button"
+                        className="remove-btn"
+                        onClick={() => removeProject(index)}
+                        style={{
+                            position: "absolute",
+                            top: "10px",
+                            right: "10px",
+                            padding: "4px 10px",
+                            borderRadius: "8px",
+                            background: "#ff4d4d",
+                            color: "white",
+                            border: "none",
+                            cursor: "pointer",
+                            fontSize: "12px"
+                        }}
+                    >
+                        Remove
+                    </button>
 
-                        <button
-                            type="button"
-                            className="remove-btn"
-                            style={{
-                                padding: "6px 10px",
-                                fontSize: "13px",
-                                borderRadius: "12px",
-                                position: "static",
-                            }}
-                            onClick={() => removeProject(index)}
-                        >
-                            Remove
-                        </button>
-                    </div>
+                    <h4 style={{ fontSize: "16px", fontWeight: 600, marginBottom: "12px" }}>
+                        {project.title || "Project"}
+                    </h4>
 
                     <input
                         className="round-input"
@@ -106,7 +97,9 @@ export default function ProjectsEditor({ section, onChange }: Props) {
                         className="round-input"
                         placeholder="Short description..."
                         value={project.description}
-                        onChange={(e) => updateField(index, "description", e.target.value)}
+                        onChange={(e) =>
+                            updateField(index, "description", e.target.value)
+                        }
                         style={{ marginTop: 8 }}
                     />
 
@@ -128,53 +121,14 @@ export default function ProjectsEditor({ section, onChange }: Props) {
                 </div>
             ))}
 
-            {/* Блок додавання нового проекту */}
-            <div className="inner-card" style={{ padding: "18px", marginTop: "20px" }}>
-                <h4 className="section-title" style={{ fontSize: "18px" }}>
-                    Add New Project
-                </h4>
-
-                <input
-                    className="round-input"
-                    placeholder="Project Title"
-                    value={newProject.title}
-                    onChange={(e) => setNewProject({ ...newProject, title: e.target.value })}
-                    style={{ marginTop: 12 }}
-                />
-
-                <textarea
-                    className="round-input"
-                    placeholder="Short description..."
-                    value={newProject.description}
-                    onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
-                    style={{ marginTop: 10 }}
-                />
-
-                <input
-                    className="round-input"
-                    placeholder="Project Link"
-                    value={newProject.link}
-                    onChange={(e) => setNewProject({ ...newProject, link: e.target.value })}
-                    style={{ marginTop: 10 }}
-                />
-
-                <input
-                    className="round-input"
-                    placeholder="Image URL (optional)"
-                    value={newProject.imageUrl}
-                    onChange={(e) => setNewProject({ ...newProject, imageUrl: e.target.value })}
-                    style={{ marginTop: 10 }}
-                />
-
-                <button
-                    type="button"
-                    className="purple-btn"
-                    style={{ width: "100%", marginTop: 14 }}
-                    onClick={addProject}
-                >
-                    + Add Project
-                </button>
-            </div>
+            <button
+                type="button"
+                className="purple-btn"
+                style={{ width: "100%", marginTop: 14 }}
+                onClick={addProject}
+            >
+                + Add Project
+            </button>
         </div>
     );
 }

@@ -45,7 +45,7 @@ export default function SectionSidebar({ resume, saveChanges }: Props) {
                 break;
 
             case "video":
-                newSection = { id: crypto.randomUUID(), type, data: { url: "" } };
+                newSection = { id: crypto.randomUUID(), type, data: { videoUrl: "", url: "" } };
                 break;
 
             default:
@@ -60,34 +60,36 @@ export default function SectionSidebar({ resume, saveChanges }: Props) {
     return (
         <div className="sidebar">
 
-            <h3 className="section-title" style={{ marginBottom: "6px" }}>
-                Add Section
-            </h3>
+            <h3 className="section-title">Add Section</h3>
 
-            <button className="sidebar-btn" onClick={() => addSection("about")}>
-                + About
-            </button>
+            <div className="sidebar-buttons">
 
-            <button className="sidebar-btn" onClick={() => addSection("skills")}>
-                + Skills
-            </button>
+                <button className="sidebar-btn" onClick={() => addSection("about")}>
+                    + About
+                </button>
 
-            <button className="sidebar-btn" onClick={() => addSection("experience")}>
-                + Experience
-            </button>
+                <button className="sidebar-btn" onClick={() => addSection("skills")}>
+                    + Skills
+                </button>
 
-            <button className="sidebar-btn" onClick={() => addSection("projects")}>
-                + Projects
-            </button>
+                <button className="sidebar-btn" onClick={() => addSection("experience")}>
+                    + Experience
+                </button>
 
-            <button className="sidebar-btn" onClick={() => addSection("contacts")}>
-                + Contacts
-            </button>
+                <button className="sidebar-btn" onClick={() => addSection("projects")}>
+                    + Projects
+                </button>
 
-            <button className="sidebar-btn" onClick={() => addSection("video")}>
-                + Pitch Video
-            </button>
+                <button className="sidebar-btn" onClick={() => addSection("contacts")}>
+                    + Contacts
+                </button>
 
+                <button className="sidebar-btn" onClick={() => addSection("video")}>
+                    + Pitch Video
+                </button>
+
+            </div>
         </div>
+
     );
 }

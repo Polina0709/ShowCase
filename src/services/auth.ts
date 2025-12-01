@@ -39,7 +39,6 @@ export async function loginWithGoogle() {
     const userRef = ref(db, `users/${user.uid}`);
     const snapshot = await get(userRef);
 
-    // Якщо запису в БД немає → створюємо
     if (!snapshot.exists()) {
         const [name = "", lastName = ""] = (user.displayName ?? "").split(" ");
 

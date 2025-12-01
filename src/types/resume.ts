@@ -92,7 +92,7 @@ export interface VideoSection {
     id: string;
     type: "video";
     data: {
+        videoUrl: string;
         url: string;
     };
 }
-

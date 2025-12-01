@@ -7,8 +7,8 @@ import Signup from "../pages/Auth/Signup";
 import Onboarding from "../pages/Auth/Onboarding";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import ResumeBuilder from "../pages/ResumeBuilder/ResumeBuilder";
-import PublicResume from "../pages/PublicResume/PublicResume";
-import ProfilePage from "../pages/ProfilePage"; // ✅ ДОДАНО
+import {PublicResume} from "../pages/PublicResume/PublicResume";
+import ProfilePage from "../pages/ProfilePage";
 
 // Router guard
 import ProtectedRoute from "./ProtectedRoute";

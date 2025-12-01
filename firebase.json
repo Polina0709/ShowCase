@@ -4,6 +4,17 @@
   },
   "hosting": {
     "public": "dist",
+    "headers": [
+      {
+        "source": "/index.html",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store, no-cache, must-revalidate, max-age=0"
+          }
+        ]
+      }
+    ],
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -23,23 +34,11 @@
     "rules": "database.rules.json"
   },
   "emulators": {
-    "auth": {
-      "port": 9099
-    },
-    "functions": {
-      "port": 5001
-    },
-    "database": {
-      "port": 9000
-    },
-    "storage": {
-      "port": 9199
-    },
-    "hosting": {
-      "port": 5174
-    },
-    "ui": {
-      "enabled": true
-    }
+    "auth": { "port": 9099 },
+    "functions": { "port": 5001 },
+    "database": { "port": 9000 },
+    "storage": { "port": 9199 },
+    "hosting": { "port": 5174 },
+    "ui": { "enabled": true }
   }
 }

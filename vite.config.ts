@@ -4,7 +4,10 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
     plugins: [react()],
     build: {
-        outDir: "dist"
+        outDir: "dist",
+        manifest: true,       // ✔ потрібний для коректної роботи файлів
+        sourcemap: false,
     }
 })
+
 

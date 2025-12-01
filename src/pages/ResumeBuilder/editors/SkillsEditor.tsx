@@ -10,7 +10,6 @@ export default function SkillsEditor({ section, onChange }: Props) {
     const initial = Array.isArray(section.data?.skills) ? section.data.skills : [];
     const [skills, setSkills] = useState<string[]>(initial);
 
-    // sync when external changes happen
     useEffect(() => setSkills(initial), [section.data]);
 
     const updateSkill = (index: number, value: string) => {

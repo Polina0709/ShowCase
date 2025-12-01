@@ -107,14 +107,23 @@ export default function ProfilePage() {
                 />
 
                 <input
-                    placeholder="City, Country..."
-                    value={`${form.city || ""}${form.city && form.country ? ", " : ""}${form.country || ""}`}
+                    placeholder="City, Country"
+                    value={
+                        [form.city, form.country].filter(Boolean).join(", ")
+                    }
                     onChange={(e) => {
-                        const [city, country] = e.target.value.split(",");
-                        handleChange("city", (city || "").trim());
-                        handleChange("country", (country || "").trim());
+                        const value = e.target.value;
+
+                        const commaCount = (value.match(/,/g) || []).length;
+                        if (commaCount > 1) return;
+
+                        const [cityPart, countryPart] = value.split(",").map((v) => v.trim());
+
+                        handleChange("city", cityPart ?? "");
+                        handleChange("country", countryPart ?? "");
                     }}
                 />
+
 
                 <button className="profile-save" onClick={handleSave}>
                     SAVE

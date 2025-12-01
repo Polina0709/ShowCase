@@ -16,5 +16,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
-export const db = getDatabase(app);
+export const db = getDatabase(
+    app,
+    "https://showcase-33bff-default-rtdb.europe-west1.firebasedatabase.app"
+);
 export const storage = getStorage(app);
