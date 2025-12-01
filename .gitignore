@@ -1,46 +1,100 @@
-# Logs
-logs
-*.log
+# --------------------------------------
+# Node
+# --------------------------------------
+node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-.env
-
-# OS / IDE
-.idea/
-.vscode/
-
-# Node / build
-node_modules/
+# --------------------------------------
+# Build output
+# --------------------------------------
 dist/
-coverage/
+build/
+.cache/
+temp/
+.tmp/
+
+# Vite cache
+.vite/
+
+# ESLint cache
+.eslintcache
+
+# --------------------------------------
+# Environment variables
+# --------------------------------------
+.env
+.env.*
+!.env.example
 
 # Firebase
 .firebase/
 firebase-debug.log
-database-debug.log
-storage-debug.log
-functions/lib/
-functions/node_modules/
+.firebaserc.local
 
+# --------------------------------------
+# OS / System files
+# --------------------------------------
+.DS_Store
+.DS_Store?
+Thumbs.db
+Desktop.ini
 
-.env.*.local
+# --------------------------------------
+# Editor settings
+# --------------------------------------
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+
+# JetBrains IDEs (WebStorm, IntelliJ)
+.idea/
+*.iml
+
+# --------------------------------------
+# Logs
+# --------------------------------------
+logs/
+*.log
+*.log.*
+
+# --------------------------------------
+# Local caches
+# --------------------------------------
+.cache/
+.parcel-cache/
+
+# --------------------------------------
+# MacOS
+# --------------------------------------
+.AppleDouble
+.LSOverride
+Icon?
+._*
+
+# --------------------------------------
+# Webstorm / JetBrains
+# --------------------------------------
+.idea/
+*.iml
+out/
+
+# --------------------------------------
+# Optional: ignore generated PDF exports
+# (залежно від твого проєкту)
+# --------------------------------------
+*.pdf
+
+# --------------------------------------
+# Optional: ignore screenshots
+# --------------------------------------
+*.png
+*.jpg
+*.jpeg
+*.svg
+*.webp
 
